@@ -23,7 +23,9 @@ class FitbitCredentials {
     required this.userID,
     required this.fitbitAccessToken,
     required this.fitbitRefreshToken,
-  });
+  }) {
+    print('id from cred: $userID !!!!!!!!!!!!!!!!');
+  }
 
   /// Method to be used to create new [FitbitCredentials] fobjet from the current one
   /// as its copy with (possibly) new [userID], [fitbitAccessToken], and/or [fitbitRefreshToken].

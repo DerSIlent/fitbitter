@@ -54,7 +54,7 @@ class FitbitAuthAPIURL extends FitbitAPIURL {
 
     return FitbitAuthAPIURL(
       url:
-          'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=$clientID&redirect_uri=$encodedRedirectUri&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight%20oxygen_saturation%20respiratory_rate%20temperature&expires_in=604800',
+          'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=$clientID&redirect_uri=$encodedRedirectUri&scope=activity%20heartrate&expires_in=604800',
       fitbitCredentials: null,
       data: null,
       authorizationHeader: null,

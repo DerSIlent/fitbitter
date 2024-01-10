@@ -52,6 +52,7 @@ class FitbitAuthAPIURL extends FitbitAPIURL {
     // Encode the redirectUri
     final String encodedRedirectUri = Uri.encodeFull(redirectUri);
 
+    /// TODO allow user to choose which scopes they want
     return FitbitAuthAPIURL(
       url:
           'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=$clientID&redirect_uri=$encodedRedirectUri&scope=activity%20heartrate&expires_in=604800',

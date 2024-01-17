@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:fitbitter/src/fitbitConnector.dart';
 import 'package:fitbitter/src/urls/fitbitAPIURL.dart';
 
@@ -48,14 +50,14 @@ class FitbitAuthAPIURL extends FitbitAPIURL {
   /// Factory constructor that generates a [FitbitAuthAPIURL] to be used
   /// to get to the fitbit authorization form.
   factory FitbitAuthAPIURL.authorizeForm(
-      {required String redirectUri, String? clientID}) {
+      {required String redirectUri, String? clientID, required String codeChallenge}) {
     // Encode the redirectUri
     final String encodedRedirectUri = Uri.encodeFull(redirectUri);
 
     /// TODO allow user to choose which scopes they want
     return FitbitAuthAPIURL(
       url:
-          'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=$clientID&redirect_uri=$encodedRedirectUri&scope=activity%20heartrate&expires_in=604800',
+          'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=$clientID&redirect_uri=$encodedRedirectUri&code_challenge=$codeChallenge&code_challenge_method=S256&scope=activity%20heartrate&expires_in=604800',
       fitbitCredentials: null,
       data: null,
       authorizationHeader: null,
@@ -68,7 +70,8 @@ class FitbitAuthAPIURL extends FitbitAPIURL {
       {required String redirectUri,
       String? code,
       String? clientID,
-      String? clientSecret}) {
+      String? clientSecret,
+      String? verifier}) {
     // Encode the redirectUri
     final String encodedRedirectUri = Uri.encodeFull(redirectUri);
 
@@ -120,5 +123,12 @@ class FitbitAuthAPIURL extends FitbitAPIURL {
   static String _getBaseURL() {
     return 'https://api.fitbit.com/oauth2';
   } // _getBaseURL
+
+  String generateCodeChallenge(String codeVerifier) {
+    var bytes = utf8.encode(codeVerifier);
+    var digest = sha256.convert(bytes);
+    String codeChallenge = base64Url.encode(digest.bytes);
+    return codeChallenge.replaceAll('=', '');
+  }
 
 } // FitbitAuthAPIURL

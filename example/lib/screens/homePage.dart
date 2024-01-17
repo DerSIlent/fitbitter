@@ -28,7 +28,8 @@ class HomePage extends StatelessWidget {
                         clientID: Strings.fitbitClientID,
                         clientSecret: Strings.fitbitClientSecret,
                         redirectUri: Strings.fitbitRedirectUri,
-                        callbackUrlScheme: Strings.fitbitCallbackScheme);
+                        callbackUrlScheme: Strings.fitbitCallbackScheme,
+                        codeChallenge: '');
                 print(fitbitCredentials);
 
                 //Instantiate a proper data manager (for example, for SpO2 data)
@@ -60,5 +61,4 @@ class HomePage extends StatelessWidget {
       ),
     );
   } //build
-
 } //HomePage

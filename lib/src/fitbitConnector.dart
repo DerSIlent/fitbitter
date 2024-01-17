@@ -150,7 +150,8 @@ class FitbitConnector {
       {required String clientID,
       required String clientSecret,
       required String redirectUri,
-      required String callbackUrlScheme}) async {
+      required String callbackUrlScheme,
+      required String codeChallenge}) async {
     // Instantiate Dio and its Response
     Dio dio = Dio();
     Response response;
@@ -159,7 +160,7 @@ class FitbitConnector {
 
     // Generate the fitbit url
     final fitbitAuthorizeFormUrl = FitbitAuthAPIURL.authorizeForm(
-        redirectUri: redirectUri, clientID: clientID);
+        redirectUri: redirectUri, clientID: clientID, codeChallenge: codeChallenge);
 
     // Perform authentication
     try {

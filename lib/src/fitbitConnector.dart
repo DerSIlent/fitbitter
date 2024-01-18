@@ -159,7 +159,9 @@ class FitbitConnector {
       required String clientSecret,
       required String redirectUri,
       required String callbackUrlScheme,
-      required String codeChallenge}) async {
+      required String codeChallenge,
+      required String verifier,
+      }) async {
     // Instantiate Dio and its Response
     Dio dio = Dio();
     Response response;
@@ -185,7 +187,9 @@ class FitbitConnector {
           redirectUri: redirectUri,
           code: code,
           clientID: clientID,
-          clientSecret: clientSecret);
+          clientSecret: clientSecret,
+          verifier: verifier,
+      );
 
       response = await dio.post(
         fitbitAuthorizeUrl.url,

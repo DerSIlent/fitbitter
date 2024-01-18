@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +32,7 @@ class HomePage extends StatelessWidget {
                         clientSecret: Strings.fitbitClientSecret,
                         redirectUri: Strings.fitbitRedirectUri,
                         callbackUrlScheme: Strings.fitbitCallbackScheme,
-                        codeChallenge: '');
+                        codeChallenge: '', verifier: '');
                 print(fitbitCredentials);
 
                 //Instantiate a proper data manager (for example, for SpO2 data)
@@ -62,3 +65,18 @@ class HomePage extends StatelessWidget {
     );
   } //build
 } //HomePage
+
+
+
+// String generateCodeVerifier() {
+//   final random = Random.secure();
+//   return List<String>.generate(50, (i) => random.nextInt(9).toString())
+//       .join();
+// }
+//
+// String generateCodeChallenge(String codeVerifier) {
+//   var bytes = utf8.encode(codeVerifier);
+//   var digest = sha256.convert(bytes);
+//   String codeChallenge = base64Url.encode(digest.bytes);
+//   return codeChallenge.replaceAll('=', '');
+// }

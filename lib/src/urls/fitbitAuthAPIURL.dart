@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:crypto/crypto.dart';
 import 'package:fitbitter/src/fitbitConnector.dart';
 import 'package:fitbitter/src/urls/fitbitAPIURL.dart';
 
@@ -49,7 +48,9 @@ class FitbitAuthAPIURL extends FitbitAPIURL {
   /// Factory constructor that generates a [FitbitAuthAPIURL] to be used
   /// to get to the fitbit authorization form.
   factory FitbitAuthAPIURL.authorizeForm(
-      {required String redirectUri, String? clientID, required String codeChallenge}) {
+      {required String redirectUri,
+      String? clientID,
+      required String codeChallenge}) {
     // Encode the redirectUri
     final String encodedRedirectUri = Uri.encodeFull(redirectUri);
 
@@ -83,7 +84,7 @@ class FitbitAuthAPIURL extends FitbitAPIURL {
       fitbitCredentials: null,
       url: '${_getBaseURL()}/token',
       data:
-          'client_id=$clientID&grant_type=authorization_code&code=$code&redirect_uri=$encodedRedirectUri',
+          'client_id=$clientID&grant_type=authorization_code&code_verifier=$verifier&code=$code&redirect_uri=$encodedRedirectUri',
       authorizationHeader: 'Basic $authorizationHeader',
     );
   } // FitbitAuthAPIURL.authorize

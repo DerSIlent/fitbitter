@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:fitbitter/src/fitbitConnector.dart';
@@ -123,12 +122,4 @@ class FitbitAuthAPIURL extends FitbitAPIURL {
   static String _getBaseURL() {
     return 'https://api.fitbit.com/oauth2';
   } // _getBaseURL
-
-  String generateCodeChallenge(String codeVerifier) {
-    var bytes = utf8.encode(codeVerifier);
-    var digest = sha256.convert(bytes);
-    String codeChallenge = base64Url.encode(digest.bytes);
-    return codeChallenge.replaceAll('=', '');
-  }
-
 } // FitbitAuthAPIURL

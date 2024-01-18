@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:fitbitter/src/urls/fitbitAuthAPIURL.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:logger/logger.dart';
-
-import 'package:fitbitter/src/urls/fitbitAuthAPIURL.dart';
 
 /// [FitbitCredentials] is a class that is in charge of managing the credentials to be used
 /// to make requests to the Fitbit Web APIs: [userID], [fitbitAccessToken], and [fitbitRefreshToken].
@@ -18,11 +17,14 @@ class FitbitCredentials {
   /// The Fitbit refresh token associated to the credentials.
   String fitbitRefreshToken;
 
+  String? code;
+
   /// Default constructor of [FitbitCredentials].
   FitbitCredentials({
     required this.userID,
     required this.fitbitAccessToken,
     required this.fitbitRefreshToken,
+    required this.code,
   }) {
     print('id from cred: $userID !!!!!!!!!!!!!!!!');
   }
@@ -30,7 +32,10 @@ class FitbitCredentials {
   /// Method to be used to create new [FitbitCredentials] fobjet from the current one
   /// as its copy with (possibly) new [userID], [fitbitAccessToken], and/or [fitbitRefreshToken].
   FitbitCredentials copyWith(
-      {String? userID, String? fitbitAccessToken, String? fitbitRefreshToken}) {
+      {String? userID,
+      String? fitbitAccessToken,
+      String? fitbitRefreshToken,
+      String? code}) {
     String u = userID == null ? this.userID : userID;
     String fa =
         fitbitAccessToken == null ? this.fitbitAccessToken : fitbitAccessToken;
@@ -38,7 +43,10 @@ class FitbitCredentials {
         ? this.fitbitRefreshToken
         : fitbitRefreshToken;
     return FitbitCredentials(
-        userID: u, fitbitAccessToken: fa, fitbitRefreshToken: fr);
+        userID: u,
+        fitbitAccessToken: fa,
+        fitbitRefreshToken: fr,
+        code: this.code ?? code);
   } //copyWith
 
   @override
@@ -160,7 +168,9 @@ class FitbitConnector {
 
     // Generate the fitbit url
     final fitbitAuthorizeFormUrl = FitbitAuthAPIURL.authorizeForm(
-        redirectUri: redirectUri, clientID: clientID, codeChallenge: codeChallenge);
+        redirectUri: redirectUri,
+        clientID: clientID,
+        codeChallenge: codeChallenge);
 
     // Perform authentication
     try {
@@ -199,9 +209,11 @@ class FitbitConnector {
       final userID = response.data['user_id'] as String;
 
       fitbitCredentials = FitbitCredentials(
-          userID: userID,
-          fitbitAccessToken: accessToken,
-          fitbitRefreshToken: refreshToken);
+        userID: userID,
+        fitbitAccessToken: accessToken,
+        fitbitRefreshToken: refreshToken,
+        code: code,
+      );
     } catch (e) {
       print(e);
     } // catch
@@ -246,5 +258,4 @@ class FitbitConnector {
       print(e);
     } // catch
   } // unauthorize
-
 } // FitbitConnector

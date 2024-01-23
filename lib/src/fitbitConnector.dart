@@ -19,34 +19,43 @@ class FitbitCredentials {
 
   String? code;
 
+  int expiresInSeconds;
+
   /// Default constructor of [FitbitCredentials].
   FitbitCredentials({
     required this.userID,
     required this.fitbitAccessToken,
     required this.fitbitRefreshToken,
     required this.code,
+    required this.expiresInSeconds,
   }) {
     print('id from cred: $userID !!!!!!!!!!!!!!!!');
   }
 
   /// Method to be used to create new [FitbitCredentials] fobjet from the current one
   /// as its copy with (possibly) new [userID], [fitbitAccessToken], and/or [fitbitRefreshToken].
-  FitbitCredentials copyWith(
-      {String? userID,
-      String? fitbitAccessToken,
-      String? fitbitRefreshToken,
-      String? code}) {
+  FitbitCredentials copyWith({
+    String? userID,
+    String? fitbitAccessToken,
+    String? fitbitRefreshToken,
+    String? code,
+    int? expiresInSeconds,
+  }) {
     String u = userID == null ? this.userID : userID;
     String fa =
         fitbitAccessToken == null ? this.fitbitAccessToken : fitbitAccessToken;
     String fr = fitbitRefreshToken == null
         ? this.fitbitRefreshToken
         : fitbitRefreshToken;
+    int eIs =
+        expiresInSeconds == null ? this.expiresInSeconds : expiresInSeconds;
     return FitbitCredentials(
-        userID: u,
-        fitbitAccessToken: fa,
-        fitbitRefreshToken: fr,
-        code: this.code ?? code);
+      userID: u,
+      fitbitAccessToken: fa,
+      fitbitRefreshToken: fr,
+      code: this.code ?? code,
+      expiresInSeconds: eIs,
+    );
   } //copyWith
 
   @override
@@ -154,14 +163,14 @@ class FitbitConnector {
   } // isTokenValid
 
   /// Method that implements the OAuth 2.0 protocol and gets the access and refresh tokens from Fitbit APIs.
-  static Future<FitbitCredentials?> authorize(
-      {required String clientID,
-      required String clientSecret,
-      required String redirectUri,
-      required String callbackUrlScheme,
-      required String codeChallenge,
-      required String verifier,
-      }) async {
+  static Future<FitbitCredentials?> authorize({
+    required String clientID,
+    required String clientSecret,
+    required String redirectUri,
+    required String callbackUrlScheme,
+    required String codeChallenge,
+    required String verifier,
+  }) async {
     // Instantiate Dio and its Response
     Dio dio = Dio();
     Response response;
@@ -184,11 +193,11 @@ class FitbitConnector {
 
       // Generate the fitbit url
       final fitbitAuthorizeUrl = FitbitAuthAPIURL.authorize(
-          redirectUri: redirectUri,
-          code: code,
-          clientID: clientID,
-          clientSecret: clientSecret,
-          verifier: verifier,
+        redirectUri: redirectUri,
+        code: code,
+        clientID: clientID,
+        clientSecret: clientSecret,
+        verifier: verifier,
       );
 
       response = await dio.post(
@@ -211,13 +220,14 @@ class FitbitConnector {
       final accessToken = response.data['access_token'] as String;
       final refreshToken = response.data['refresh_token'] as String;
       final userID = response.data['user_id'] as String;
+      final expiresInSeconds = response.data['expires_in'] as int;
 
       fitbitCredentials = FitbitCredentials(
-        userID: userID,
-        fitbitAccessToken: accessToken,
-        fitbitRefreshToken: refreshToken,
-        code: code,
-      );
+          userID: userID,
+          fitbitAccessToken: accessToken,
+          fitbitRefreshToken: refreshToken,
+          code: code,
+          expiresInSeconds: expiresInSeconds);
     } catch (e) {
       print(e);
     } // catch
